@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ notlar.ad }} - Ders Notları</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 1rem;
+        }
+
+        .navbar {
+            background-color: #0080ff;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fcfafa !important;
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fcfafa !important;
+            font-size: 1rem;
+        }
+
+        .content {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .not-card {
+            max-width: 400px;
+            height: auto;
+            border-radius: 8px;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .not-details {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .not-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .not-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: #555;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            margin-top: auto;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Ders Notları</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Hakkında</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">İletişim</a>
+                    </li>
+                </ul>
+                <form class="d-flex ms-3" method="GET" action="{% url 'home' %}">
+                    <input class="form-control me-2" type="search" placeholder="Ara" aria-label="Ara" name="q">
+                    <button class="btn btn-outline-dark" type="submit">Ara</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+        <img src="{{ notlar.resim.url }}" alt="{{ notlar.ad }}" class="not-card">
+        <div class="not-details">
+            <h1 class="not-title">{{ notlar.ad }}</h1>
+            <p class="not-description">{{ notlar.aciklama }}</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Ders Notları. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

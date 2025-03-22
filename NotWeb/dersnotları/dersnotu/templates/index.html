@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ders Notları</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 1rem; /* Genel yazı boyutunu normal yaptım */
+        }
+
+        .navbar {
+            background-color: #0080ff;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fcfafa !important;
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fcfafa !important;
+            font-size: 1rem;
+        }
+
+        .sidebar {
+            background-color: #343a40;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            padding: 20px;
+            overflow-y: auto;
+            font-size: 1rem;
+        }
+
+        .sidebar .kategori-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            text-align: center;
+            padding: 10px;
+            background-color: #495057;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .sidebar .kategori-title:hover {
+            background-color: #6c757d;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #adb5bd;
+            font-size: 1rem;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 30px;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        .card {
+            min-height: 350px; /* Tüm kartların minimum yüksekliği */
+            max-height: 350px; /* Tüm kartların maksimum yüksekliği */
+            display: flex;
+            flex-direction: column; /* İçeriği dikey hizalamak için */
+            justify-content: space-between; /* İçeriği eşit şekilde yerleştirmek için */
+        }
+
+        .card img {
+            height: 150px; /* Görseller için sabit yükseklik */
+            object-fit: cover; /* Görseli düzgün bir şekilde kırp */
+        }
+
+        .card-body {
+            overflow: hidden; /* Taşan içeriği gizler */
+            text-overflow: ellipsis; /* Taşan metinlerde üç nokta (...) ekler */
+        }
+
+        .not-card-title {
+            font-size: 1.2rem; /* Başlık boyutunu normal tuttum */
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .not-card-description {
+            font-size: 1rem; /* Açıklama metninin boyutu */
+            color: #555;
+            line-height: 1.5;
+            max-height: 50px; /* Açıklama metninin maksimum yüksekliği */
+            overflow: hidden; /* Taşan metni gizler */
+            text-overflow: ellipsis; /* Taşan metni üç noktayla keser */
+        }
+
+        .btn {
+            margin-top: auto; /* Butonu kartın altına yerleştirir */
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background-color: #e9ecef;
+            color: #333;
+            margin-top: auto;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Ders Notları</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Hakkında</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">İletişim</a>
+                    </li>
+                </ul>
+                <form class="d-flex ms-3 search-form" method="GET" action="{% url 'home' %}">
+                    <input class="form-control me-2" type="search" placeholder="Ara" aria-label="Ara" name="q">
+                    <button class="btn btn-outline-dark" type="submit">Ara</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar">
+        <div class="kategori-title" onclick="location.href='{% url 'home' %}'">Kategoriler</div>
+        <ul>
+            {% for kategori in kategoriler %}
+            <li><a href="{% url 'kategoridetay' kategori.slug %}">{{ kategori.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="content">
+        <div class="row">
+            {% for not in notlar %}
+            <div class="col-md-4">
+                <div class="card not-card">
+                    <img src="{{ not.resim.url }}" class="card-img-top" alt="{{ not.ad }}">
+                    <div class="card-body">
+                        <h5 class="not-card-title">{{ not.ad }}</h5>
+                        <p class="not-card-description">{{ not.aciklama|truncatewords:20 }}</p>
+                        <a href="{% url 'dersnotu' not.slug %}" class="btn btn-primary">Detayları Gör</a>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 and not forloop.last %}
+            </div>
+            <div class="row mt-4">
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Sayfalandırma -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if notlar.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ notlar.previous_page_number }}" aria-label="Önceki">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% for num in notlar.paginator.page_range %}
+                <li class="page-item {% if notlar.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if notlar.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ notlar.next_page_number }}" aria-label="Sonraki">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Ders Notları. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
